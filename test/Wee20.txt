@@ -1,0 +1,4 @@
+var: s11,s12,s0,s2,a00,a01,a11_i,a12_i,a2_j,w11_j,w12_j,w13_i,w21_j,w22_j,w23_i.
+PublicKey:[a00]_1,[a01]_1,[a00*w11_i+a01*w21_i]_1,[a00*w12_i+a01*w22_i]_1,[a00*w13_i+a01*w23_i]_1,[a11_i]_1,[a12_i]_1,[a11_i]_2,[a12_i]_2,[a2_j]_2.
+Enc: [s11*a11_i+s12*a12_i+x_i]_1,[s0*a00*w11_i+s0*a01*w21_i+s11*y_j]_1,[s0*a00*w12_i+s0*a01*w22_i+s12*y_j]_1,[s0*a00*w13_i+s0*a01*w23_i+s2*s11*a11_i+s2*s12*a12_i+s2*x_i]_1,[s0*a00]_1,[s0*a01]_1,[s2*a2_j+y_j]_2.
+KeyGen:[{a11_i*q_ij*w11_j+a12_i*q_ij*w12_j+q_ij*a2_j*w13_i}]_2,[{a11_i*q_ij*w21_j+a12_i*q_ij*w22_j+q_ij*a2_j*w23_i}]_2.

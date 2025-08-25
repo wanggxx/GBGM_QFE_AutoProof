@@ -1,0 +1,4 @@
+var: s1,s2,s0,a0,a1_i,a2_j,w3_j,w4_i.
+PublicKey:[a0]_1,[a0*w3_j]_1,[a0*w4_j]_1,[a1_i]_1,[a1_i]_2,[a2_i]_2.
+Enc: [s1*a1_i+x_i]_1,[s0*a0*w3_j+s1*y_j]_1,[s0*a0*w4_i+s1*s2*a1_i+s2*x_i]_1,[s0*a0]_1,[s2*a2_j+y_j]_2.
+KeyGen:[{a1_i*q_ij*w3_j+q_ij*a2_j*w4_i}]_2.

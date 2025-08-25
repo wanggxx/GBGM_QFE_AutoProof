@@ -1,0 +1,5 @@
+var:S_i,T_j,A,B,C,D,L,U,W.
+PublicKey: [A*D*S_i-B*C*S_i]_1,[A*D*W-B*C*W]_1,[T_j]_2.
+Enc: [L*A*D-L*B*C]_1,[L*A*D*W-L*B*C*W]_1,[D*x_i-L*C*S_i]_1,[-B*x_i+L*A*S_i]_1,[C*y_j-D*T_j]_2,[A*y_j-B*T_j]_2.
+KeyGen: [{q_ij*S_i*T_j}+U*W]_2,[U]_2.
+offset: A*D-B*C,1.

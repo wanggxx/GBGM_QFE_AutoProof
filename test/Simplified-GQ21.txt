@@ -1,0 +1,5 @@
+var: m1,m2,m3,m4,d,s,t,l,w,a_i,b_j.
+PublicKey:[a_i*m1*m4-a_i*m2*m3]_1,[d*m1*m4-d*m2*m3]_1,[d*w*m1*m4-d*w*m2*m3]_1,[b_j]_2.
+Enc: [x_i*m4-m2*s*a_i]_1,[m1*s*a_i-x_i*m3]_1,[s*t*m1*m4-s*t*m2*m3+w*d*l*m1*m4-w*d*l*m2*m3]_1,[d*l*m1*m4-d*l*m2*m3]_1,[y_j*m1+b_j*t*m3]_2,[y_j*m2+b_j*t*m4]_2.
+KeyGen:[{q_ij*a_i*b_j}]_2,[{w*q_ij*a_i*b_j}]_2.
+offset: m1*m4-m2*m3,1.

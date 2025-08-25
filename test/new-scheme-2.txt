@@ -1,0 +1,4 @@
+var: A_i,B_j,C_i,D_j,R,S,T.
+PublicKey: [A_i]_1,[C_i]_1,[B_j]_2,[D_j]_2. 
+Enc: [R*A_i+x_i]_1,[T*C_i+S*x_i]_1,[S*B_j+y_j]_2,[R*S*B_j+T*D_j+R*y_j]_2,[T]_1.
+KeyGen: [{q_ij*A_i*D_j+q_ij*C_i*B_j}]_2.
