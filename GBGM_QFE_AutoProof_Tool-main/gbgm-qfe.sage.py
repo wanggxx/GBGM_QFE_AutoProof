@@ -16,62 +16,51 @@ def read(name):
     G1_poly = []
     G2_poly = []
     GT_poly = []
-    list1 = [[],[],[],[],[],[],[],[]]
+    list1 = [[],[],[],[],[]]
     count = 0
     file_object = open(name,'r')
     while True:
         line = file_object.readline()
         if line:
-            for j in line.split(';'):
-                b = j.find('in')
-                if b >= 0:
-                    tmp = j.find(':')
-                    if tmp >=0:
-                        list1[count] = list1[count] + j[tmp+1:b].replace(' ','').split(',')
-                    else:
-                        list1[count] = list1[count] + j[0:b].replace(' ','').split(',')
-                else:
-                    list1[count] = list1[count]+ ['no']
+            b = line.find(':')
+            c = line.find('.')
+            list1[count] = line[b+1:c].replace(' ','').split(',')
             count = count + 1
         else:
             break
     file_object.close()
 
-    x = list1[0]
-    y = list1[1]
-    q = list1[2]
-    variable = list1[3]
-    public = list1[4]
-    enc = list1[5]
-    keygen = list1[6]
-    offset = list1[7]
+    var_ex = list1[0]
+    public = list1[1]
+    enc = list1[2]
+    keygen = list1[3]
+    if len(list1) > 4:
+        offset = list1[4]
+    else:
+        offset = []
 
-    tmp = ''
+    tmp = 'x_1,x_2,y_1,y_2,q_11,q_12,q_21,q_22'
     tmp1 = ''
-    param = []
+    x = ['x_1','x_2']
+    y = ['y_1','y_2']
+    q = ['q_11','q_12','q_21','q_22']
     x_var = []
     y_var = []
     q_var = []
+    param = x+y+q
     offset_poly = []
-    for i in range(len(x)):
-        param.append(x[i])
-        tmp = tmp + x[i]
-        tmp = tmp + ','
-    for j in range(len(y)):
-        param.append(y[j])
-        tmp = tmp + y[j]
-        tmp = tmp + ','
-    for k in range(len(q)-1):
-        param.append(q[k])
-        tmp = tmp + q[k]
-        tmp = tmp + ','
-    tmp = tmp + list1[2][len(q)-1]
-    param.append(q[len(q)-1])
-    for i in range(len(variable)-1):
-        tmp1 =tmp1 + variable[i]
-        tmp1 =tmp1 + ','
-    tmp1 = tmp1 + list1[3][len(variable)-1]
-    R_QQ = PolynomialRing(QQ,len(x)+len(y)+len(q),tmp)
+    variable = []
+    for i in range(len(var_ex)):
+        if '_i' in var_ex[i] or '_j' in var_ex[i]:
+            variable.append(var_ex[i].replace('_i','_1').replace('_j','_1'))
+            tmp1 = tmp1 + var_ex[i].replace('_i','_1').replace('_j','_1') + ','
+            variable.append(var_ex[i].replace('_i','_2').replace('_j','_2'))
+            tmp1 = tmp1 + var_ex[i].replace('_i','_2').replace('_j','_2') + ','
+        else:
+            variable.append(var_ex[i])
+            tmp1 = tmp1 + var_ex[i] + ','
+    tmp1 = tmp1[0:len(tmp1)-1]
+    R_QQ = PolynomialRing(QQ,len(param),tmp)
     T_R = PolynomialRing(R_QQ,len(variable),tmp1)
     RT = R_QQ.gens()
     TT = T_R.gens()
@@ -90,76 +79,115 @@ def read(name):
     for i in public:
         if i[-1] == '1':
             m = re.findall(r'\[(.*?)\]',i)[0]
-            G1_poly.append(eval(m))
+            if '_i' in m or '_j' in m:
+                G1_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
+                G1_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+            else:
+                G1_poly.append(eval(m))
         if i[-1] == '2':
             m = re.findall(r'\[(.*?)\]',i)[0]
-            G2_poly.append(eval(m))
+            if '_i' in m or '_j' in m:
+                G2_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
+                G2_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+            else:
+                G2_poly.append(eval(m))
         if i[-1] == 'T':
             m = re.findall(r'\[(.*?)\]',i)[0]
-            GT_poly.append(eval(m))
+            if '_i' in m or '_j' in m:
+                GT_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
+                GT_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+            else:
+                GT_poly.append(eval(m))
     
     for i in enc:
         if i[-1] == '1':
             m = re.findall(r'\[(.*?)\]',i)[0]
-            G1_poly.append(eval(m))
+            if '_i' in m or '_j' in m:
+                G1_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
+                G1_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+            else:
+                G1_poly.append(eval(m))
         if i[-1] == '2':
             m = re.findall(r'\[(.*?)\]',i)[0]
-            G2_poly.append(eval(m))
+            if '_i' in m or '_j' in m:
+                G2_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
+                G2_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+            else:
+                G2_poly.append(eval(m))
         if i[-1] == 'T':
             m = re.findall(r'\[(.*?)\]',i)[0]
-            GT_poly.append(eval(m))
+            if '_i' in m or '_j' in m:
+                GT_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
+                GT_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+            else:
+                GT_poly.append(eval(m))
 
     for i in keygen:
         if i[-1] == '1':
             m = re.findall(r'\[(.*?)\]',i)[0]
-            G1_poly.append(eval(m))
+            if '_ij' in m:
+                G1_poly.append(expand_key(m))
+            else:
+                G1_poly.append(eval(m))
         if i[-1] == '2':
             m = re.findall(r'\[(.*?)\]',i)[0]
-            G2_poly.append(eval(m))
+            if '_ij' in m:
+                G2_poly.append(expand_key(m))
+            else:
+                G2_poly.append(eval(m))
         if i[-1] == 'T':
             m = re.findall(r'\[(.*?)\]',i)[0]
-            GT_poly.append(eval(m))
+            if '_ij' in m:
+                GT_poly.append(expand_key(m))
+            else:
+                GT_poly.append(eval(m))
 
-    if offset[0] != 'no':
-        for i in offset:
-            offset_poly.append(eval(i))
+    if offset != []:
+        G1_poly.append(eval(offset[0]))
+        G2_poly.append(eval(offset[1]))
+    else:
+        G1_poly.append(G1_poly[0]*0+1)
+        G2_poly.append(G2_poly[0]*0+1)
 
     return G1_poly,G2_poly,GT_poly,offset_poly
 
+def expand_key(str_key):
+    m = re.findall(r'{(.*?)}',str_key)[0]
+    m11 = m.replace('_ij','_11').replace('_i','_1').replace('_j','_1')
+    s = str_key.replace('{'+m+'}',m11)
+    return eval(s)+eval(m.replace('_ij','_12').replace('_i','_1').replace('_j','_2'))+eval(m.replace('_ij','_21').replace('_i','_2').replace('_j','_1'))+eval(m.replace('_ij','_22').replace('_i','_2').replace('_j','_2'))
+
 def parametric_completion(G1_poly,G2_poly,GT_poly,offset_poly):
-    G1_poly.append(G1_poly[0] * 0 + 1)
-    G2_poly.append(G2_poly[0] * 0 + 1)
+    GT_str = []
+    for i in GT_poly:
+        GT_str.append('['+str(i)+']_T')
     for i in G1_poly:
         for j in G2_poly:
             poly = i * j
             GT_poly.append(poly)
-    if offset_poly != []:
-        GT_poly.remove(1)
-        for i in offset_poly:
-            GT_poly.append(i)
-    return GT_poly
+            GT_str.append('e(['+str(i)+']_1,['+str(j)+']_2)')
+    return GT_poly,GT_str
 
-def merge(GT_poly):
+def merge(GT_poly,GT_str):
     monomial = []
     coeff = []
     dict_merge = {}
     dict_count = {}
     dict_coeff = {}
+    dict_alter = {}
+    dict_var = {}
     for i in GT_poly:
         monomial.append(i.monomials())
         coeff.append(i.coefficients())
-
-    for i in range(len(monomial)):
-        for j in range(len(monomial[i])):
-            str_var = str(monomial[i][j])
-            for k in str_var.split('*'):
-                if '_' in k and '^' in k:
-                    monomial.append([monomial[i][j]])
-                    coeff.append([coeff[i][j]])
+    var('xx_1,xx_2,yy_1,yy_2')
+    for i in range(len(GT_poly)):
+        dict_var['h'+str(i)]=GT_str[i]
+        var('q_'+str(i)+'_11,q_'+str(i)+'_12,q_'+str(i)+'_21,q_'+str(i)+'_22')
 
     for i in range(len(monomial)):
         for j in range(len(monomial[i])):
             dict_merge[monomial[i][j]] = 0
+            dict_alter[monomial[i][j]] = 0
             dict_count[monomial[i][j]] = 0
             dict_coeff[monomial[i][j]] = []
     for i in range(len(monomial)):
@@ -191,10 +219,58 @@ def merge(GT_poly):
     for i in range(len(set_monomial)):
         for j in range(len(set_monomial[i])):
             dict_merge[set_monomial[i][j].monomial] = dict_merge[set_monomial[i][j].monomial]+set_monomial[i][j].coeff
+            mono = str(set_monomial[i][j].coeff).replace('x','xx').replace('y','yy').replace('q','q_'+str(i))
+            dict_alter[set_monomial[i][j].monomial] = dict_alter[set_monomial[i][j].monomial]+eval(mono)
             dict_coeff[set_monomial[i][j].monomial].append(set_monomial[i][j].h)
-    return dict_merge,dict_coeff
 
-def verify(dict_merge,dict_coeff):    
+    return dict_merge,dict_coeff,dict_alter,dict_var
+
+def extract_var(sol):
+    result = re.split(r'[ |+|\-|*|/|,|(|)|=]',sol)
+    set = []
+    for i in result:
+        if i != '' and i[0] == 'h':
+            if i not in set:
+                set.append(i)
+    return set
+
+def subs_var(str,dict_var):
+    subs_str = ''
+    set = extract_var(str)
+    for i in set:
+        subs_str = subs_str + i + ' * ' + dict_var[i] + ' + '
+    return subs_str[0:len(subs_str)-2]
+
+def degen_check(dict_alter,dict_var):
+    dict_h = {}
+    solve_left = []
+    right = [var('xx_1'),var('xx_2'),var('yy_1'),var('yy_2')]
+    for i in dict_var.keys():
+        if 'q' in str(dict_var[i]) and ('x' in str(dict_var[i]) or 'y' in str(dict_var[i])):
+            j = str(i)[1:len(str(i))]
+            right = right + [var('q_'+j+'_11'),var('q_'+j+'_12'),var('q_'+j+'_21'),var('q_'+j+'_22')]
+        else:
+            dict_h[var(i)] = 0
+    for i in dict_alter.values():
+        if i != 0:
+            solve_left.append(i.subs(dict_h))
+    Kernel = sy.solve(solve_left,right)
+    if type(Kernel) == type([]):
+        for i in Kernel:
+            set = extract_var(str(i))
+            if set != []:
+                s = ''
+                for j in set:
+                    s = s + str(dict_var[j]) + '; '
+                print('Attack Found if Linear Dependent: '+s)
+                return("FAIL!")
+    else:
+        for i in Kernel.keys():
+            if Kernel[i] != 0:
+                return("FAIL!")
+    return("PASS!")
+
+def verify(dict_merge,dict_coeff,dict_var):
     solve_left_q = []
     solve_left_xy = []
     right_q = []
@@ -210,60 +286,69 @@ def verify(dict_merge,dict_coeff):
             if dict_merge[i] != 0 :
                 solve_left_xy.append(dict_merge[i])
                 right_xy = right_xy + dict_coeff[i]
-        
+    
     Kernel_q = sy.solve(solve_left_q,right_q)
     if Kernel_q == []:
+        print("Correctness Check Fail!")
         return "FAIL!"
-    print("Kernel_q:")
-    print(Kernel_q)
+    #print("Kernel_q:")
+    #print(Kernel_q)
     right_tmp = list(set(right_xy) - set(right_q))
     for i in solve_left_xy:
         solve_left_sub.append(i.subs(Kernel_q))
     Kernel = sy.solve(solve_left_sub,right_tmp)
-    print("Kernel_xy:")
-    print(Kernel)
+    #print("Kernel_xy:")
+    #print(Kernel)
     if right_tmp!= [] and Kernel == []:
+        print("Correctness Check Fail!")
         return "FAIL!"
     flag = -1
-    for i in Kernel.values():
-        if i == 0:
+    sim_check = {}
+    sim_check[var('q')]=eval('-(q_12*x_1*y_2+q_21*x_2*y_1+q_22*x_2*y_2)/(x_1*y_1)')
+    for i in Kernel.keys():
+        if Kernel[i] == 0:
             continue
-        a = re.split(r'[+|-]',str(i))
-        for k in a:
-            if k == '':
-                continue
-            if ('x' in k and 'y' not in k) or ('x' in k and 'y' not in k):
-                flag = 0
-                break
-            if 'x_i*y_j' in k:
-                b = k.replace('*x_i*y_j','')
-                for j in Kernel_q.values():
-                    if 'q_ij' in b or (b+'/q_ij') in str(j):
-                        flag = 1
-                        break
-        if(flag == 0):
+        if 'x' not in str(Kernel[i]) and 'y' not in str(Kernel[i]):
+            continue
+        if sy.simplify(eval(str(Kernel[i]).replace('q_11','q')).subs(sim_check)) != 0:
+            flag = 0
             break
+        else:
+            flag = 1
+    if flag == -1:
+        print("Correctness Check Fail!")
+        return "FAIL!"
+    att_eq = ''
     if flag != 1:
+        for i in Kernel.keys():
+            if Kernel[i] != 0 and sy.simplify(eval(str(Kernel[i]).replace('q_11','q')).subs(sim_check)) != 0:
+                att_eq = att_eq + str(i) + ' = ' + str(Kernel[i]) + ' , '
+        att_eq = att_eq + subs_var(att_eq,dict_var) + ' = 0'
+        print('Attack Found with Equations: ' + att_eq)
         return "FAIL!"
     solve_verify_0 = []
     for i in solve_left_sub:
         solve_verify_0.append(i.subs(Kernel))
-    print("solve_verify_0:")
-    print(solve_verify_0)
+    #print("solve_verify_0:")
+    #print(solve_verify_0)
     for i in solve_verify_0:
-        if i != 0:
+        if ('x' in str(i) or 'y' in str(i)) and sy.simplify(eval(str(i).replace('q_11','q')).subs(sim_check)) != 0:
+            print('Attack Found with Equation: '+str(i)+' , '+subs_var(str(i),dict_var)+' = 0')
             return "FAIL!" 
     return "PASS!"
  
 def run(choose):
+    print("File name: "+choose)
     G1_poly, G2_poly,GT_poly,offset_poly = read(choose)
     print("=================Read Finished!========================")
     start = time.time()
-    GT_poly = parametric_completion(G1_poly,G2_poly,GT_poly,offset_poly)
+    GT_poly, GT_str = parametric_completion(G1_poly,G2_poly,GT_poly,offset_poly)
     print("========Monomial_combination Finished!=================")
-    dict_merge,dict_coeff = merge(GT_poly)
+    dict_merge,dict_coeff,dict_alter,dict_var = merge(GT_poly,GT_str)
     print("==============Merge Finished!==========================")
-    result = verify(dict_merge,dict_coeff)
+    result = degen_check(dict_alter,dict_var)
+    if result == 'PASS!':
+        result = verify(dict_merge,dict_coeff,dict_var)
     print("==============Verify Finished!=========================")
     print(result)
     print("=========================Time==========================")
