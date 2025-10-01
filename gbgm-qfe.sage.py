@@ -3,6 +3,8 @@ from sage.all import *
 import time
 import re
 
+in_len = 2
+
 class monomials:
     monomial = ''
     coeff = ''
@@ -38,12 +40,22 @@ def read(name):
         offset = list1[4]
     else:
         offset = []
-
-    tmp = 'x_1,x_2,y_1,y_2,q_11,q_12,q_21,q_22'
+    tmp_x = ''
+    tmp_y = ''
+    tmp_q = ''
     tmp1 = ''
-    x = ['x_1','x_2']
-    y = ['y_1','y_2']
-    q = ['q_11','q_12','q_21','q_22']
+    x = []
+    y = []
+    q = []
+    for i in range(in_len):
+        tmp_x += 'x_'+str(i+1)+','
+        tmp_y += 'y_'+str(i+1)+','
+        x.append('x_'+str(i+1))
+        y.append('y_'+str(i+1))
+        for j in range(in_len):
+            tmp_q += 'q_'+str(i+1)+str(j+1)+','
+            q.append('q_'+str(i+1)+str(j+1))
+    tmp = tmp_x+tmp_y+tmp_q[0:len(tmp_q)-1]
     x_var = []
     y_var = []
     q_var = []
@@ -52,10 +64,9 @@ def read(name):
     variable = []
     for i in range(len(var_ex)):
         if '_i' in var_ex[i] or '_j' in var_ex[i]:
-            variable.append(var_ex[i].replace('_i','_1').replace('_j','_1'))
-            tmp1 = tmp1 + var_ex[i].replace('_i','_1').replace('_j','_1') + ','
-            variable.append(var_ex[i].replace('_i','_2').replace('_j','_2'))
-            tmp1 = tmp1 + var_ex[i].replace('_i','_2').replace('_j','_2') + ','
+            for k in range(in_len):
+                variable.append(var_ex[i].replace('_i','_'+str(k+1)).replace('_j','_'+str(k+1)))
+                tmp1 = tmp1 + var_ex[i].replace('_i','_'+str(k+1)).replace('_j','_'+str(k+1)) + ','
         else:
             variable.append(var_ex[i])
             tmp1 = tmp1 + var_ex[i] + ','
@@ -80,22 +91,22 @@ def read(name):
         if i[-1] == '1':
             m = re.findall(r'\[(.*?)\]',i)[0]
             if '_i' in m or '_j' in m:
-                G1_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
-                G1_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+                for k in range(in_len):
+                    G1_poly.append(eval(m.replace('_i','_'+str(k+1)).replace('_j','_'+str(k+1))))
             else:
                 G1_poly.append(eval(m))
         if i[-1] == '2':
             m = re.findall(r'\[(.*?)\]',i)[0]
             if '_i' in m or '_j' in m:
-                G2_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
-                G2_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+                for k in range(in_len):
+                    G2_poly.append(eval(m.replace('_i','_'+str(k+1)).replace('_j','_'+str(k+1))))
             else:
                 G2_poly.append(eval(m))
         if i[-1] == 'T':
             m = re.findall(r'\[(.*?)\]',i)[0]
             if '_i' in m or '_j' in m:
-                GT_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
-                GT_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+                for k in range(in_len):
+                    GT_poly.append(eval(m.replace('_i','_'+str(k+1)).replace('_j','_'+str(k+1))))
             else:
                 GT_poly.append(eval(m))
     
@@ -103,22 +114,22 @@ def read(name):
         if i[-1] == '1':
             m = re.findall(r'\[(.*?)\]',i)[0]
             if '_i' in m or '_j' in m:
-                G1_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
-                G1_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+                for k in range(in_len):
+                    G1_poly.append(eval(m.replace('_i','_'+str(k+1)).replace('_j','_'+str(k+1))))
             else:
                 G1_poly.append(eval(m))
         if i[-1] == '2':
             m = re.findall(r'\[(.*?)\]',i)[0]
             if '_i' in m or '_j' in m:
-                G2_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
-                G2_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+                for k in range(in_len):
+                    G2_poly.append(eval(m.replace('_i','_'+str(k+1)).replace('_j','_'+str(k+1))))
             else:
                 G2_poly.append(eval(m))
         if i[-1] == 'T':
             m = re.findall(r'\[(.*?)\]',i)[0]
             if '_i' in m or '_j' in m:
-                GT_poly.append(eval(m.replace('_i','_1').replace('_j','_1')))
-                GT_poly.append(eval(m.replace('_i','_2').replace('_j','_2')))
+                for k in range(in_len):
+                    GT_poly.append(eval(m.replace('_i','_'+str(k+1)).replace('_j','_'+str(k+1))))
             else:
                 GT_poly.append(eval(m))
 
@@ -154,8 +165,11 @@ def read(name):
 def expand_key(str_key):
     m = re.findall(r'{(.*?)}',str_key)[0]
     m11 = m.replace('_ij','_11').replace('_i','_1').replace('_j','_1')
-    s = str_key.replace('{'+m+'}',m11)
-    return eval(s)+eval(m.replace('_ij','_12').replace('_i','_1').replace('_j','_2'))+eval(m.replace('_ij','_21').replace('_i','_2').replace('_j','_1'))+eval(m.replace('_ij','_22').replace('_i','_2').replace('_j','_2'))
+    ev = eval(str_key.replace('{'+m+'}','0'))
+    for i in range(in_len):
+        for j in range(in_len):
+            ev = ev+eval(m.replace('_ij','_'+str(i+1)+str(j+1)).replace('_i','_'+str(i+1)).replace('_j','_'+str(j+1)))
+    return ev
 
 def parametric_completion(G1_poly,G2_poly,GT_poly,offset_poly):
     GT_str = []
@@ -179,10 +193,12 @@ def merge(GT_poly,GT_str):
     for i in GT_poly:
         monomial.append(i.monomials())
         coeff.append(i.coefficients())
-    var('xx_1,xx_2,yy_1,yy_2')
-    for i in range(len(GT_poly)):
-        dict_var['h'+str(i)]=GT_str[i]
-        var('q_'+str(i)+'_11,q_'+str(i)+'_12,q_'+str(i)+'_21,q_'+str(i)+'_22')
+    for i in range(in_len):
+        var('xx_'+str(i+1)+',yy_'+str(i+1))
+        for j in range(in_len):
+            for k in range(len(GT_poly)):
+                dict_var['h'+str(k)]=GT_str[k]
+                var('q_'+str(k)+'_'+str(i+1)+str(j+1))
 
     for i in range(len(monomial)):
         for j in range(len(monomial[i])):
@@ -244,11 +260,16 @@ def subs_var(str,dict_var):
 def degen_check(dict_alter,dict_var):
     dict_h = {}
     solve_left = []
-    right = [var('xx_1'),var('xx_2'),var('yy_1'),var('yy_2')]
+    right = []
+    for i in range(in_len):
+        right.append(var('xx_'+str(i+1)))
+        right.append(var('yy_'+str(i+1)))
     for i in dict_var.keys():
         if 'q' in str(dict_var[i]) and ('x' in str(dict_var[i]) or 'y' in str(dict_var[i])):
             j = str(i)[1:len(str(i))]
-            right = right + [var('q_'+j+'_11'),var('q_'+j+'_12'),var('q_'+j+'_21'),var('q_'+j+'_22')]
+            for i1 in range(in_len):
+                for j1 in range(in_len):
+                    right.append(var('q_'+j+'_'+str(i1+1)+str(j1+1)))
         else:
             dict_h[var(i)] = 0
     for i in dict_alter.values():
@@ -304,7 +325,11 @@ def verify(dict_merge,dict_coeff,dict_var):
         return "FAIL!"
     flag = -1
     sim_check = {}
-    sim_check[var('q')]=eval('-(q_12*x_1*y_2+q_21*x_2*y_1+q_22*x_2*y_2)/(x_1*y_1)')
+    ev = eval('q_11')
+    for i in range(in_len):
+        for j in range(in_len):
+            ev = ev - eval('q_'+str(i+1)+str(j+1)+'*x_'+str(i+1)+'*y_'+str(j+1)+'/(x_1*y_1)')
+    sim_check[var('q')] = ev
     for i in Kernel.keys():
         if Kernel[i] == 0:
             continue
@@ -353,10 +378,14 @@ def run(choose):
     print(result)
     print("=========================Time==========================")
     end = time.time()
-    print(end-start)
+    print(str(end-start)+'s')
+    if result == 'FAIL!':
+        sys.exit()
 
 if __name__ == '__main__':
     choose = sys.argv[1]
+    run(choose)
+    in_len = 3
     run(choose)
 
         
